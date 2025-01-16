@@ -212,14 +212,27 @@ function renderSchedule(timetable) {
 }
 
 function solve() {
-  $.post("/timetables", JSON.stringify(loadedSchedule), function (data) {
-    scheduleId = data;
-    refreshSolvingButtons(true);
-  }).fail(function (xhr, ajaxOptions, thrownError) {
-      showError("Start solving failed.", xhr);
-      refreshSolvingButtons(false);
-    },
-    "text");
+    // Get the dropdown value
+    var algorithm = $("#algorithm").val()
+
+    // Send the POST request with the selected algorithm as a custom header
+    $.ajax({
+      url: "/timetables",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(loadedSchedule),
+      headers: {
+        "X-Algorithm": algorithm // Set custom header
+      },
+      success: function (data) {
+        scheduleId = data;
+        refreshSolvingButtons(true);
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        showError("Start solving failed.", xhr);
+        refreshSolvingButtons(false);
+      }
+    });
 }
 
 function analyze() {
