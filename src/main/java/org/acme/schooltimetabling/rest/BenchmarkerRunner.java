@@ -66,7 +66,7 @@ public class BenchmarkerRunner {
         ProblemBenchmarksConfig problemBenchmarksConfig = new ProblemBenchmarksConfig();
         problemBenchmarksConfig.setSolutionFileIOClass(TimetableJsonIO.class);
         problemBenchmarksConfig.setWriteOutputSolutionEnabled(true);
-        problemBenchmarksConfig.setInputSolutionFileList(Collections.singletonList(new File("data/example_LARGE.json")));
+        problemBenchmarksConfig.setInputSolutionFileList(List.of(new File("data/example_SMALL.json"), new File("data/example_LARGE.json")));
 
         List<SolverBenchmarkConfig> solverBenchmarkConfigList = new ArrayList<>(List.of());
 

@@ -4,6 +4,8 @@ import ai.timefold.solver.core.api.domain.lookup.PlanningId;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.util.List;
+
 @JsonIdentityInfo(scope = Room.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Room {
 
@@ -12,12 +14,15 @@ public class Room {
 
     private String name;
 
+    private List<String> suitableSubjects;
+
     public Room() {
     }
 
-    public Room(String id, String name) {
+    public Room(String id, String name, List<String> suitableSubjects) {
         this.id = id;
         this.name = name;
+        this.suitableSubjects = suitableSubjects;
     }
 
     @Override
@@ -35,5 +40,9 @@ public class Room {
 
     public String getName() {
         return name;
+    }
+
+    public List<String> getSuitableSubjects() {
+        return suitableSubjects;
     }
 }

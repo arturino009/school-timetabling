@@ -85,13 +85,16 @@ public class TimetableDemoResource {
 
         List<Room> rooms = new ArrayList<>(3);
         long nextRoomId = 0L;
-        rooms.add(new Room(Long.toString(nextRoomId++), "Room A"));
-        rooms.add(new Room(Long.toString(nextRoomId++), "Room B"));
-        rooms.add(new Room(Long.toString(nextRoomId++), "Room C"));
+        rooms.add(new Room(Long.toString(nextRoomId++), "Laboratory", List.of("Chemistry", "Biology")));
+        rooms.add(new Room(Long.toString(nextRoomId++), "Regular classroom", List.of("Math", "Physics", "History", "English", "Spanish")));
+        rooms.add(new Room(Long.toString(nextRoomId++), "Room C", List.of("Math", "Physics", "History", "English", "Spanish")));
         if (demoData == DemoData.LARGE) {
-            rooms.add(new Room(Long.toString(nextRoomId++), "Room D"));
-            rooms.add(new Room(Long.toString(nextRoomId++), "Room E"));
-            rooms.add(new Room(Long.toString(nextRoomId++), "Room F"));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room D", List.of("Math", "Physics", "History", "English", "Spanish")));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room E", List.of("Math", "Physics", "History", "English", "Spanish")));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room F", List.of("Math", "Physics", "History", "English", "Spanish")));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room G", List.of("Math", "Physics", "History", "English", "Spanish")));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room H", List.of("Math", "Physics", "History", "English", "Spanish")));
+            rooms.add(new Room(Long.toString(nextRoomId++), "Room I", List.of("Math", "Physics", "History", "English", "Spanish")));
         }
 
         List<Lesson> lessons = new ArrayList<>();

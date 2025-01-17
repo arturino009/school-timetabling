@@ -2,6 +2,7 @@ package org.acme.schooltimetabling.solver;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 
 import jakarta.inject.Inject;
 
@@ -18,8 +19,8 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 class TimetableConstraintProviderTest {
 
-    private static final Room ROOM1 = new Room("1", "Room1");
-    private static final Room ROOM2 = new Room("2", "Room2");
+    private static final Room ROOM1 = new Room("1", "Room1", List.of("Math", "Physics", "History", "English", "Spanish"));
+    private static final Room ROOM2 = new Room("2", "Room2", List.of("Math", "Physics", "History", "English", "Spanish"));
     private static final Timeslot TIMESLOT1 = new Timeslot("1", DayOfWeek.MONDAY, LocalTime.NOON);
     private static final Timeslot TIMESLOT2 = new Timeslot("2", DayOfWeek.TUESDAY, LocalTime.NOON);
     private static final Timeslot TIMESLOT3 = new Timeslot("3", DayOfWeek.TUESDAY, LocalTime.NOON.plusHours(1));

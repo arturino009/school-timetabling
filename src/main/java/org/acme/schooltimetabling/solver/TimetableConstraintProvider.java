@@ -17,12 +17,14 @@ public class TimetableConstraintProvider implements ConstraintProvider {
         return new Constraint[] {
                 // Hard constraints
                 roomConflict(constraintFactory),
+                roomSuitabilityConstraint(constraintFactory),
                 teacherConflict(constraintFactory),
                 studentGroupConflict(constraintFactory),
                 // Soft constraints
                 teacherRoomStability(constraintFactory),
                 teacherTimeEfficiency(constraintFactory),
-                studentGroupSubjectVariety(constraintFactory)
+                studentGroupSubjectVariety(constraintFactory),
+                studentGroupTimeEfficiency(constraintFactory),
         };
     }
 
@@ -38,6 +40,15 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 // ... and penalize each pair with a hard weight.
                 .penalize(HardSoftScore.ONE_HARD)
                 .asConstraint("Room conflict");
+    }
+
+    Constraint roomSuitabilityConstraint(ConstraintFactory constraintFactory) {
+        // A room can only host suitable subjects
+        return constraintFactory
+                .forEach(Lesson.class)
+                .filter(lesson -> !lesson.getRoom().getSuitableSubjects().contains(lesson.getSubject()))
+                .penalize(HardSoftScore.ONE_HARD)
+                .asConstraint("Room not suitable for lesson");
     }
 
     Constraint teacherConflict(ConstraintFactory constraintFactory) {
@@ -100,6 +111,21 @@ public class TimetableConstraintProvider implements ConstraintProvider {
                 })
                 .penalize(HardSoftScore.ONE_SOFT)
                 .asConstraint("Student group subject variety");
+    }
+
+    Constraint studentGroupTimeEfficiency(ConstraintFactory constraintFactory) {
+        // Student groups prefer to attend sequential lessons and dislike gaps between lessons.
+        return constraintFactory
+                .forEach(Lesson.class)
+                .join(Lesson.class, Joiners.equal(Lesson::getStudentGroup),
+                        Joiners.equal((lesson) -> lesson.getTimeslot().getDayOfWeek()))
+                .filter((lesson1, lesson2) -> {
+                    Duration between = Duration.between(lesson1.getTimeslot().getEndTime(),
+                            lesson2.getTimeslot().getStartTime());
+                    return !between.isNegative() && between.compareTo(Duration.ofMinutes(30)) <= 0;
+                })
+                .reward(HardSoftScore.ONE_SOFT)
+                .asConstraint("Student time efficiency");
     }
 
 }

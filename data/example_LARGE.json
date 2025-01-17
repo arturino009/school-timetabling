@@ -155,27 +155,94 @@
   "rooms": [
     {
       "id": "0",
-      "name": "Room A"
+      "name": "Chemistry lab",
+      "suitableSubjects": [
+        "Chemistry"
+      ]
     },
     {
       "id": "1",
-      "name": "Room B"
+      "name": "Regular classroom",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
     },
     {
       "id": "2",
-      "name": "Room C"
+      "name": "Biology lab",
+      "suitableSubjects": [
+        "Biology"
+      ]
     },
     {
       "id": "3",
-      "name": "Room D"
+      "name": "Room D",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
     },
     {
       "id": "4",
-      "name": "Room E"
+      "name": "Room E",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
     },
     {
       "id": "5",
-      "name": "Room F"
+      "name": "Room F",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Room G",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Room H",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Room I",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
     }
   ],
   "lessons": [

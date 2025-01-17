@@ -65,15 +65,28 @@
   "rooms": [
     {
       "id": "0",
-      "name": "Room A"
+      "name": "Chemistry lab",
+      "suitableSubjects": [
+        "Chemistry"
+      ]
     },
     {
       "id": "1",
-      "name": "Room B"
+      "name": "Regular classroom",
+      "suitableSubjects": [
+        "Math",
+        "Physics",
+        "History",
+        "English",
+        "Spanish"
+      ]
     },
     {
       "id": "2",
-      "name": "Room C"
+      "name": "Biology lab",
+      "suitableSubjects": [
+        "Biology"
+      ]
     }
   ],
   "lessons": [
