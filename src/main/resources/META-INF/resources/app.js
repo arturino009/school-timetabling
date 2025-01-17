@@ -17,6 +17,9 @@ $(document).ready(function () {
   $("#analyzeButton").click(function () {
     analyze();
   });
+  $("#benchmarkButton").click(function () {
+      benchmark();
+    });
 
   setupAjax();
   fetchDemoData();
@@ -235,6 +238,30 @@ function solve() {
     });
 }
 
+function benchmark() {
+    $("#benchmarkButton").hide();
+    $("#waitingBenchmarkButton").show();
+
+    const payload = {};
+    var par = $("#benchmarkParameters").serializeArray()
+    payload.duration = par[0].value
+    payload.construction_heuristic = par[1].value
+    payload.algorithms = []
+    $('[name="algorithm"]:checked').each(function() {
+        var value = $(this).val();
+        payload.algorithms.push(value);
+    });
+    $.post("benchmark", JSON.stringify(payload), function (data) {
+        $("#benchmarkButton").show();
+        $("#waitingBenchmarkButton").hide();
+        }).fail(function (xhr, ajaxOptions, thrownError) {
+          showError("Start benchmarking failed.", xhr);
+          $("#benchmarkButton").show();
+          $("#waitingBenchmarkButton").hide();
+        },
+        "text");
+}
+
 function analyze() {
   new bootstrap.Modal("#scoreAnalysisModal").show()
   const scoreAnalysisModalContent = $("#scoreAnalysisModalContent");
@@ -382,6 +409,9 @@ function replaceQuickstartTimefoldAutoHeaderFooter() {
             <ul class="nav nav-pills">
               <li class="nav-item active" id="navUIItem">
                 <button class="nav-link active" id="navUI" data-bs-toggle="pill" data-bs-target="#demo" type="button">Demo UI</button>
+              </li>
+              <li class="nav-item" id="navBenchmarkItem">
+                <button class="nav-link" id="navBenchmark" data-bs-toggle="pill" data-bs-target="#Benchmark" type="button">Benchmarker</button>
               </li>
               <li class="nav-item" id="navRestItem">
                 <button class="nav-link" id="navRest" data-bs-toggle="pill" data-bs-target="#rest" type="button">Guide</button>

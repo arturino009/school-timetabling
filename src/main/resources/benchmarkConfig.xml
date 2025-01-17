@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://timefold.ai/xsd/benchmark https://timefold.ai/xsd/benchmark/benchmark.xsd">
+    <benchmarkDirectory>benchmarkReports</benchmarkDirectory>
+
+    <inheritedSolverBenchmark>
+        <solver>
+            <solutionClass>org.acme.schooltimetabling.domain.Timetable</solutionClass>
+            <entityClass>org.acme.schooltimetabling.domain.Lesson</entityClass>
+            <scoreDirectorFactory>
+                <constraintProviderClass>org.acme.schooltimetabling.solver.TimetableConstraintProvider</constraintProviderClass>
+            </scoreDirectorFactory>
+            <termination>
+                <secondsSpentLimit>5</secondsSpentLimit>
+            </termination>
+            <constructionHeuristic>
+                <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+            </constructionHeuristic>
+        </solver>
+        <problemBenchmarks>
+            <solutionFileIOClass>org.acme.schooltimetabling.domain.TimetableJsonIO</solutionFileIOClass>
+            <writeOutputSolutionEnabled>true</writeOutputSolutionEnabled>
+<!--            <inputSolutionFile>data/example_SMALL.json</inputSolutionFile>-->
+            <inputSolutionFile>data/example_LARGE.json</inputSolutionFile>
+            <singleStatisticType>CONSTRAINT_MATCH_TOTAL_BEST_SCORE</singleStatisticType>
+            <singleStatisticType>PICKED_MOVE_TYPE_BEST_SCORE_DIFF</singleStatisticType>
+            <singleStatisticType>CONSTRAINT_MATCH_TOTAL_STEP_SCORE</singleStatisticType>
+        </problemBenchmarks>
+    </inheritedSolverBenchmark>
+    <solverBenchmark>
+        <name>HILL_CLIMBING</name>
+        <solver>
+            <localSearch>
+                <localSearchType>HILL_CLIMBING</localSearchType>
+            </localSearch>
+        </solver>
+    </solverBenchmark>
+    <solverBenchmark>
+        <name>Tabu 5 50</name>
+        <solver>
+            <localSearch>
+                <acceptor>
+                    <valueTabuSize>5</valueTabuSize>
+                </acceptor>
+                <forager>
+                    <acceptedCountLimit>50</acceptedCountLimit>
+                </forager>
+            </localSearch>
+        </solver>
+    </solverBenchmark>
+    <solverBenchmark>
+        <name>LAHC 10</name>
+        <solver>
+            <localSearch>
+                <acceptor>
+                    <lateAcceptanceSize>10</lateAcceptanceSize>
+                </acceptor>
+                <forager>
+                    <acceptedCountLimit>1</acceptedCountLimit>
+                </forager>
+            </localSearch>
+        </solver>
+    </solverBenchmark>
+</plannerBenchmark>

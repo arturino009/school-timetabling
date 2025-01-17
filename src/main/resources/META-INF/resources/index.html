@@ -82,6 +82,39 @@
     <div id="unassignedLessons" class="row row-cols-3 g-3 mb-4"></div>
   </div>
 
+  <div id="benchmark" class="tab-pane fade  container-fluid">
+    <h1>Benchmarker</h1>
+    <p>Generate a custom benchmark</p>
+    <form id="benchmarkParameters">
+      <label for="duration">Duration (seconds):</label><br>
+      <input type="number" id="duration" name="duration"><br>
+      <br>
+      <label>Construction heuristic:</label><br>
+      <input type="radio" id="FIRST_FIT" name="construction_heuristic" value="FIRST_FIT">
+      <label for="FIRST_FIT">FIRST_FIT</label><br>
+      <input type="radio" id="ALLOCATE_ENTITY_FROM_QUEUE" name="construction_heuristic" value="ALLOCATE_ENTITY_FROM_QUEUE">
+      <label for="ALLOCATE_ENTITY_FROM_QUEUE">ALLOCATE_ENTITY_FROM_QUEUE</label><br>
+      <input type="radio" id="CHEAPEST_INSERTION" name="construction_heuristic" value="CHEAPEST_INSERTION">
+      <label for="CHEAPEST_INSERTION">CHEAPEST_INSERTION</label><br>
+      <input type="radio" id="ALLOCATE_FROM_POOL" name="construction_heuristic" value="ALLOCATE_FROM_POOL">
+      <label for="ALLOCATE_FROM_POOL">ALLOCATE_FROM_POOL</label>
+      <br>
+      <br><label>Algorithms:</label><br>
+      <input type="checkbox" id="HILL_CLIMBING" name="algorithm" value="HILL_CLIMBING">
+      <label for="HILL_CLIMBING">HILL_CLIMBING</label><br>
+      <input type="checkbox" id="TABU_SEARCH" name="algorithm" value="TABU_SEARCH">
+      <label for="TABU_SEARCH">TABU_SEARCH</label><br>
+      <input type="checkbox" id="LATE_ACCEPTANCE" name="algorithm" value="LATE_ACCEPTANCE">
+      <label for="LATE_ACCEPTANCE">LATE_ACCEPTANCE</label>
+    </form>
+    <button id="benchmarkButton" type="button" class="btn btn-success">
+      <span class="fas fa-play"></span> Run benchmark
+    </button>
+    <button id="waitingBenchmarkButton" type="button" class="btn btn-danger" style="display: none;">
+      <span class="fas fa-stop"></span> Waiting for benchmark
+    </button>
+  </div>
+
   <div id="rest" class="tab-pane fade  container-fluid">
     <h1>REST API Guide</h1>
 
