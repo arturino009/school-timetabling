@@ -1,29 +1,25 @@
 package org.acme.schooltimetabling.rest;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import ai.timefold.solver.core.api.solver.*;
+import ai.timefold.solver.core.config.constructionheuristic.ConstructionHeuristicPhaseConfig;
+import ai.timefold.solver.core.config.constructionheuristic.ConstructionHeuristicType;
+import ai.timefold.solver.core.config.localsearch.LocalSearchPhaseConfig;
+import ai.timefold.solver.core.config.localsearch.LocalSearchType;
+import ai.timefold.solver.core.config.solver.SolverConfig;
+import ai.timefold.solver.core.config.solver.SolverManagerConfig;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import ai.timefold.solver.core.api.score.analysis.ScoreAnalysis;
 import ai.timefold.solver.core.api.score.buildin.hardsoft.HardSoftScore;
-import ai.timefold.solver.core.api.solver.ScoreAnalysisFetchPolicy;
-import ai.timefold.solver.core.api.solver.SolutionManager;
-import ai.timefold.solver.core.api.solver.SolverManager;
-import ai.timefold.solver.core.api.solver.SolverStatus;
 
 import org.acme.schooltimetabling.domain.Timetable;
 import org.acme.schooltimetabling.rest.exception.ErrorInfo;
@@ -45,8 +41,17 @@ public class TimetableResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimetableResource.class);
 
-    private final SolverManager<Timetable, String> solverManager;
+    private SolverManager<Timetable, String> solverManager;
     private final SolutionManager<Timetable, HardSoftScore> solutionManager;
+
+    @Inject
+    SolverConfig baseSolverConfig;
+
+    @Produces
+    public SolverManager<Timetable, String> overrideSolverManager(SolverFactory<Timetable> solverFactory) {
+        SolverManagerConfig solverManagerConfig = new SolverManagerConfig();
+        return SolverManager.create(solverFactory, solverManagerConfig);
+    }
 
     // TODO: Without any "time to live", the map may eventually grow out of memory.
     private final ConcurrentMap<String, Job> jobIdToJob = new ConcurrentHashMap<>();
@@ -83,9 +88,32 @@ public class TimetableResource {
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces(MediaType.TEXT_PLAIN)
-    public String solve(Timetable problem) {
+    public String solve(@HeaderParam("x-algorithm") String algorithm, Timetable problem) {
         String jobId = UUID.randomUUID().toString();
         jobIdToJob.put(jobId, Job.ofTimetable(problem));
+
+        SolverConfig solverConfig = new SolverConfig(baseSolverConfig);
+
+        ConstructionHeuristicPhaseConfig constructionHeuristicPhaseConfig = new ConstructionHeuristicPhaseConfig();
+        constructionHeuristicPhaseConfig.setConstructionHeuristicType(ConstructionHeuristicType.FIRST_FIT);
+        LocalSearchPhaseConfig localSearchPhaseConfig = new LocalSearchPhaseConfig();
+
+        switch(algorithm) {
+            case "TABU_SEARCH":
+                localSearchPhaseConfig.setLocalSearchType(LocalSearchType.TABU_SEARCH);
+                break;
+            case "LATE_ACCEPTANCE":
+                localSearchPhaseConfig.setLocalSearchType(LocalSearchType.LATE_ACCEPTANCE);
+                break;
+            default:
+                localSearchPhaseConfig.setLocalSearchType(LocalSearchType.HILL_CLIMBING);
+        }
+
+        solverConfig.setPhaseConfigList(List.of(constructionHeuristicPhaseConfig, localSearchPhaseConfig));
+
+        SolverFactory<Timetable> solverFactory = SolverFactory.create(solverConfig);
+        solverManager = this.overrideSolverManager(solverFactory);
+
         solverManager.solveBuilder()
                 .withProblemId(jobId)
                 .withProblemFinder(jobId_ -> jobIdToJob.get(jobId).timetable)
